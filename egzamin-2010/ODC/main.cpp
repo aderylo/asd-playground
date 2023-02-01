@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 
-
 #define ll long long
 
 using namespace std;
@@ -13,7 +12,7 @@ bool comp(pair<ll, ll> a, pair<ll, ll> b) {
     return a.second > b.second;
 }
 
-int main(int, char**) {
+int main(int, char **) {
   std::ios_base::sync_with_stdio(false);
   std::cin.tie(NULL);
 
