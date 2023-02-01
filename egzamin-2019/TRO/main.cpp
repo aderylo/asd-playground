@@ -20,29 +20,24 @@ int main(int, char**) {
 
 
   for (ll i = 0; i < n; i++) {
-    prefix_counts.at(i) = prefix_count;
-    cin >> numbers.at(i);
-    prefix_count.at(numbers.at(i))++;
+    prefix_counts[i] = prefix_count;
+    cin >> numbers[i];
+    prefix_count[numbers[i]]++;
   }
 
   for (ll i = n - 1; i >= 0; i--) {
-    suffix_counts.at(i) = suffix_count;
-    suffix_count.at(numbers.at(i))++;
+    suffix_counts[i] = suffix_count;
+    suffix_count[numbers[i]]++;
   }
 
   for (ll i = 0; i < n; i++) {
-    ll num = numbers.at(i);
-    auto prefix = prefix_counts[i];
-    auto suffix = suffix_counts[i];
-    assert(prefix.size() == 11);
-    assert(suffix.size() == 11);
-
+    ll num = numbers[i];
 
     for (ll j = 1; j <= 10; j++) {
       if (j + num > 10)
         break;
 
-      ll pairs = prefix.at(j) * suffix.at(j + num);
+      ll pairs = prefix_counts[i][j] * suffix_counts[i][j + num];
       result += pairs;
     }
   }
