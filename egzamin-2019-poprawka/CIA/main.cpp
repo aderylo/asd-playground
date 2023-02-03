@@ -20,10 +20,13 @@ int main(int, char **) {
 
   for (ll i = 0; i < m; i++) {
     cin >> x;
-    auto before = *lower_bound(elems.begin(), elems.end(), x);
+    // if (elems.find(x) != elems.end()) {
+    //   cout << *distances.rbegin() << "\n";
+    //   continue;
+    // }
+
+    auto before = *(--lower_bound(elems.begin(), elems.end(), x));
     auto next = *upper_bound(elems.begin(), elems.end(), x);
-    if (before == x)
-      continue;
 
 
     ll new_distance = x - before;
@@ -36,6 +39,7 @@ int main(int, char **) {
     distances.insert(new_distance);
     distances.insert(next - x);
     elems.insert(x);
+
 
     cout << *distances.rbegin() << "\n";
   }
