@@ -6,6 +6,8 @@ enable_testing()
 
 add_executable(main main.cpp)
 
+add_executable(splayTreeRangeUpdates SplayTreeRangeUpdates.cpp)
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

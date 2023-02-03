@@ -20,9 +20,22 @@ int main() {
   cout << "Inorder Print of keys:" << endl;
   a.inOrderPrintKeys();
 
+  cout << "Key feature" << endl;
+  cout << a.getKeyFeature() << endl;
+
   a.deleteKey(1);
   cout << endl << endl;
 
   cout << "After deleting 1, the level order printing of keys is: " << endl;
   a.levelOrderPrintKeys();
+
+
+  cout << "Key feature" << endl;
+  cout << a.getKeyFeature() << endl;
+
+  a.deleteKey(400);
+
+
+  cout << "Key feature after delete" << endl;
+  cout << a.getKeyFeature() << endl;
 }

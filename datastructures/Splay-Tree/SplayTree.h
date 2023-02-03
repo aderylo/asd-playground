@@ -8,6 +8,8 @@ template <typename k, typename v>
 struct SplayNode {
   k key;
   v value;
+  k key_feature;
+  v value_feature;
   SplayNode<k, v>*lChild, *rChild, *parent;
 
   SplayNode() {
@@ -16,6 +18,28 @@ struct SplayNode {
 
   bool isLeafNode() {
     return (!lChild && !rChild);
+  }
+
+  void pushUp() {
+    if (isLeafNode()) {
+      key_feature = key;
+      value_feature = value;
+    }
+
+    if (lChild && rChild) {
+      key_feature = max(max(lChild->key_feature, rChild->key_feature), key);
+      value_feature = max(max(lChild->value_feature, rChild->value_feature), value);
+    }
+
+    if (lChild && !rChild) {
+      key_feature = max(lChild->key_feature, key);
+      value_feature = max(lChild->value_feature, value);
+    }
+
+    if (rChild && !lChild) {
+      key_feature = max(rChild->key_feature, key);
+      value_feature = max(rChild->value_feature, value);
+    }
   }
 };
 
@@ -139,6 +163,7 @@ class SplayTree {
         current->key = newNodeToDelete->key;
         current->value = newNodeToDelete->value;
 
+
         // in this new recursive call, case 0 and 3 will never exist. Only case 1 or case 2 will
         // exist.
         deleteKey(current->rChild, current->key);
@@ -151,6 +176,7 @@ class SplayTree {
       root = new SplayNode<k, v>;
       root->key = key;
       root->value = value;
+      root->pushUp();
       return;
     }
 
@@ -159,6 +185,7 @@ class SplayTree {
       node->lChild->key = key;
       node->lChild->value = value;
       node->lChild->parent = node;
+      node->pushUp();
       this->splay(node->lChild);
       return;
     }
@@ -168,6 +195,7 @@ class SplayTree {
       node->rChild->key = key;
       node->rChild->value = value;
       node->rChild->parent = node;
+      node->pushUp();
       this->splay(node->rChild);
       return;
     }
@@ -184,6 +212,7 @@ class SplayTree {
     else  // duplicate key, so update the value
     {
       node->value = value;
+      node->pushUp();
       this->splay(node);
       return;
     }
@@ -226,7 +255,12 @@ class SplayTree {
 
       else
         x->parent->rChild = x;
+
+      x->pushUp();
+      x->parent->pushUp();
     }
+
+    x->pushUp();
     return x;
   }
 
@@ -252,13 +286,23 @@ class SplayTree {
 
       else
         y->parent->rChild = y;
+
+      y->pushUp();
+      y->parent->pushUp();
     }
+    y->pushUp();
+
     return y;
   }
 
   void splay(SplayNode<k, v>* curr) {
-    if (curr == root || curr == nullptr)
+    curr->pushUp();
+
+
+    if (curr == root || curr == nullptr) {
+      curr->pushUp();
       return;
+    }
 
 
     // pictorial help for cases: https://www.geeksforgeeks.org/splay-tree-set-1-insert/
@@ -272,6 +316,7 @@ class SplayTree {
       else
         root = leftRotate(root);
 
+      root->pushUp();
       return;
     }  // end of zig case
 
@@ -281,12 +326,14 @@ class SplayTree {
         // root ptr of tree will be passed by reference, so root ptr of tree will also change.
         root = rightRotate(root);
         root = rightRotate(root);
+        root->pushUp();
         return;
       } else {
         curr->parent = rightRotate(curr->parent->parent);
         curr = rightRotate(curr->parent);
 
         splay(curr);
+        root->pushUp();
         return;
       }
     }  // end of zig zig case
@@ -296,12 +343,14 @@ class SplayTree {
       if (curr->parent->parent == root) {
         root = leftRotate(root);
         root = leftRotate(root);
+        root->pushUp();
         return;
       } else {
         curr->parent = leftRotate(curr->parent->parent);
         curr = leftRotate(curr->parent);
 
         splay(curr);
+        curr->pushUp();
         return;
       }
     }  // end of zag zag case
@@ -312,10 +361,12 @@ class SplayTree {
 
       if (curr->parent == root) {
         root = rightRotate(root);
+        root->pushUp();
         return;
       } else {
         curr = rightRotate(curr->parent);
         splay(curr);
+        curr->pushUp();
         return;
       }
     }  // end of zag zig case
@@ -326,13 +377,17 @@ class SplayTree {
 
       if (curr->parent == root) {
         root = leftRotate(root);
+        root->pushUp();
         return;
       } else {
         curr = leftRotate(curr->parent);
         splay(curr);
+        curr->pushUp();
         return;
       }
     }
+
+    curr->pushUp();
   }  // end of splay function
 
  public:
@@ -370,10 +425,15 @@ class SplayTree {
 
   void deleteKey(k const key) {
     this->deleteKey(this->root, key);
+    this->root->pushUp();
   }
 
   v const* search(k const key) {
     return this->search(root, key);
+  }
+
+  k getKeyFeature() {
+    return root->key_feature;
   }
 
   void deleteAll() {
