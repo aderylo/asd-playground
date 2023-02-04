@@ -130,6 +130,7 @@ class SplayTree {
 };
 
 int main() {
+  // doesn't work tho
   SplayTree tree;
   tree.insert(10);
   tree.insert(20);
